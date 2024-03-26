@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Source.Core
 {
@@ -7,6 +8,7 @@ namespace _Source.Core
         private Rigidbody2D _rigidBody2D = null;
         private Animator _animator = null;
         private SpriteRenderer _spriteRenderer = null;
+        private PlayerData _playerData;
 
         [SerializeField] private float maxSpeed = 6;
         [SerializeField] private float maxDistanceToGround = 0.1f;
@@ -22,6 +24,7 @@ namespace _Source.Core
         {
             _rigidBody2D = GetComponent<Rigidbody2D>();
             _baseGravityScale = _rigidBody2D.gravityScale;
+            _playerData = GetComponent<PlayerData>();
 
             _animator = GetComponent<Animator>();
 
@@ -74,6 +77,22 @@ namespace _Source.Core
             }
 
             _rigidBody2D.velocity = motion;
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.CompareTag("Finish"))
+            {
+                SceneManager.LoadScene(0);
+            }
+            if (collision.gameObject.CompareTag("Coin"))
+            {
+                _playerData.AddCoins(1);
+            }
+            if (collision.gameObject.CompareTag("Heart"))
+            {
+                _playerData.AddHealth(1);
+            }
         }
     }
 }
